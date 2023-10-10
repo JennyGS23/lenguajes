@@ -1,0 +1,25 @@
+% Hechos para representar personas y sus cromosomas
+persona("Persona1 Apellido1", [1, 0, 0, 0, 1, 0, 0, 0, 1, 1]).
+persona("Persona2 Apellido2", [1, 1, 1, 1, 0, 0, 0, 0, 0, 0]).
+persona("Persona3 Apellido3", [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]).
+persona("Persona4 Apellido4", [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]).
+persona("Persona5 Apellido5", [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]).
+persona("Persona6 Apellido6", [1, 1, 0, 0, 1, 1, 0, 0, 1, 1]).
+persona("Persona7 Apellido7", [0, 0, 1, 1, 0, 0, 1, 1, 0, 0]).
+persona("Persona8 Apellido8", [1, 1, 1, 0, 0, 0, 1, 1, 1, 0]).
+persona("Persona9 Apellido9", [0, 0, 0, 1, 1, 1, 0, 0, 0, 1]).
+persona("Persona10 Apellido10",[1, 0, 0, 1, 1, 0, 0, 1, 1, 0]).
+
+% Regla para calcular el porcentaje de exactitud entre dos listas de elementos
+porcentaje_exactitud([], [], 0).  % Caso base: listas vacías, 0% de exactitud.
+porcentaje_exactitud([H1|T1], [H2|T2], Porcentaje) :-
+    porcentaje_exactitud(T1, T2, PorcentajeRestante),
+    (H1 = H2 -> Porcentaje is PorcentajeRestante + 1; Porcentaje is PorcentajeRestante).
+
+% Regla para encontrar la persona más parecida a la muestra
+persona_mas_parecida(Muestra, Persona, Porcentaje) :-
+    persona(Nombre, Cromosoma),
+    porcentaje_exactitud(Muestra, Cromosoma, Porcentaje),
+    findall((Nombre, Porcentaje), (persona(Nombre, Cromosoma),
+                                   porcentaje_exactitud(Muestra, Cromosoma, Porcentaje)), ListaPorcentajes),
+    max_member((Persona, Porcentaje), ListaPorcentajes).
